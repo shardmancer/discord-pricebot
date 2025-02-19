@@ -81,6 +81,6 @@ A high-performance **Rust-powered Discord bot** that **updates channel names wit
 - 👨‍💼 Tech Projects & DeFi Servers
 
 ## 💡 Tags
-`rust discord-bot cryptocurrency crypto-price price-bot discord-price-bot price-ticker serenity-bot raspberry-pi systemd web3 defi nft live-prices`
+`rust discord-bot cryptocurrency crypto-price price-bot discord-price-bot price-ticker serenity-bot raspberry-pi systemd web3 defi nft`
 
 **By @shardmancer** ✨♣️🎰
