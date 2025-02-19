@@ -30,4 +30,4 @@ jobs:
           cd /home/shard/dock/pricebot
           git pull origin master
           cargo build --release
-          systemctl --user restart discord-pricebot
+          systemctl --machine=shard@ --user restart discord-pricebot
