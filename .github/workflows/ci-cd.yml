@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -22,18 +22,12 @@ jobs:
         run: cargo build --release
 
   deploy:
-    if: github.ref == 'refs/heads/master'
-    runs-on: ubuntu-latest
     needs: build
+    runs-on: self-hosted
     steps:
-      - name: Deploy to Raspberry Pi via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            cd /home/shard/dock/pricebot
-            git pull origin master
-            cargo build --release
-            systemctl --user restart discord-pricebot
+      - name: Pull latest code & build on Pi
+        run: |
+          cd /home/shard/dock/pricebot
+          git pull origin master
+          cargo build --release
+          systemctl --user restart discord-pricebot
