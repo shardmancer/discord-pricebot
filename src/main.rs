@@ -57,7 +57,7 @@ async fn send_price_message(webhook_url: &str, message: &str) {
 }
 
 fn format_price_fullwidth(price: f64) -> String {
-    let formatted_price = format!("{:.2}", price); // E.g., "1234.56"
+    let formatted_price = format!("{:.2}", price);
     formatted_price
         .chars()
         .map(|c| match c {
@@ -71,7 +71,7 @@ fn format_price_fullwidth(price: f64) -> String {
             '7' => '７',
             '8' => '８',
             '9' => '９',
-            '.' => '．', // Fullwidth period U+FF0E
+            '.' => '．',
             _ => c,
         })
         .collect::<String>()
@@ -97,7 +97,6 @@ async fn main() {
     let bnb_webhook = env::var("BNB_WEBHOOK").unwrap();
     let eth_webhook = env::var("ETH_WEBHOOK").unwrap();
 
-    // Correct CoinPaprika IDs
     let btc_id = "btc-bitcoin";
     let ton_id = "ton-toncoin";
     let sol_id = "sol-solana";
@@ -152,9 +151,9 @@ async fn main() {
 
             update_channel_name(&http, channel_id, &channel_name).await;
 
-            sleep(Duration::from_secs(5)).await; // Discord rate limit friendly
+            sleep(Duration::from_secs(5)).await;
         }
 
-        sleep(Duration::from_secs(300)).await; // 5-minute interval
+        sleep(Duration::from_secs(300)).await;
     }
 }
