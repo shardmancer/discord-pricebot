@@ -1,58 +1,33 @@
-name: Deploy Pricebot to Pi
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    runs-on: self-hosted
     steps:
-      - name: Checkout Code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Rust Toolchain
+      - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Build Release Binary
+      - name: Build project
         run: cargo build --release
-
-      - name: Upload Binary as Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: pricebot-binary
-          path: target/release/discord-pricebot
 
   deploy:
     needs: build
-    runs-on: ubuntu-latest
-
+    runs-on: self-hosted
     steps:
-      - name: Download Binary Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: pricebot-binary
-          path: ./pricebot
-
-      - name: Set Permissions
-        run: chmod +x ./pricebot/pricebot
-
-      - name: Deploy to Raspberry Pi via SSH
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.PI_HOST }}
-          username: ${{ secrets.PI_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: ./pricebot/pricebot
-          target: /home/shard/dock/pricebot/pricebot
-
-      - name: SSH into Pi and Run Binary
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.PI_HOST }}
-          username: ${{ secrets.PI_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            sudo /home/shard/dock/pricebot/pricebot
+      - name: Pull latest code and deploy
+        run: |
+          cd /home/shard/dock/pricebot
+          git pull origin master
+          cargo build --release
+          sudo systemctl --user restart discord-pricebot
