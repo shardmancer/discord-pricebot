@@ -30,4 +30,5 @@ jobs:
           cd /home/shard/dock/pricebot
           git pull origin master
           cargo build --release
-          systemctl --machine=shard@ --user restart discord-pricebot
+          sudo loginctl enable-linger $USER
+          systemctl --user restart discord-pricebot
